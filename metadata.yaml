@@ -15,5 +15,7 @@
 homepage: "https://www.peaksandpies.com"
 documentation: "https://github.com/peaksandpies/gtm-adform#readme"
 versions:
+  - sha: 437a208c07327604efbe34160031b6aa2280d3f9
+    changeNotes: Added support for using both an object and the table for custom variables
   - sha: b6336b92c2508a0971f8a704c6b76bc45244597a
     changeNotes: Initial version
