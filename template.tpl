@@ -2,7 +2,7 @@
 
 {
   "displayName": "Adform Tracking",
-  "description": "An unofficial template for Adform tracking.",
+  "description": "An unofficial template for Adform tracking, allowing more flexibility.",
   "categories": ["AFFILIATE_MARKETING", "ADVERTISING"],
   "securityGroups": [],
   "id": "cvt_temp_public_id",
