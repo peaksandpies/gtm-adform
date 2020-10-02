@@ -210,11 +210,11 @@ const isEmptyObject = target => {
   
   for(let key in target) {
     if(target.hasOwnProperty(key)) {
-      return true;
+      return false;
     }
   }
   
-  return false;
+  return true;
 };
 
 const _push = createQueue('_adftrack');
