@@ -71,7 +71,7 @@ ___TEMPLATE_PARAMETERS___
         ],
         "displayName": "Tracking Point Name (pagename)",
         "simpleValueType": true,
-        "name": "pagename",
+        "name": "pageName",
         "type": "TEXT"
       }
     ]
@@ -176,7 +176,7 @@ const injectScript = require('injectScript');
 // Get value of fields
 const hostname = data.hostname;
 const pm = data.pm;
-const pagename = data.pagename;
+const pagename = data.pageName;
 const divider = data.divider;
 const orderVariable = data.orderVariable;
 const orderTable = data.orderTable;
