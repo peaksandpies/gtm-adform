@@ -15,6 +15,8 @@
 homepage: "https://www.peaksandpies.com"
 documentation: "https://github.com/peaksandpies/gtm-adform#readme"
 versions:
+  - sha: f9024f4c7bd7dee988cd39388a8bdc3fc8fdd1d0
+    changeNotes: Renamed field to avoid losing data when updating
   - sha: e82dc72ea7794f2b62f904cc83499d9df5b413d1
     changeNotes: Fixed bug which occured when using an empty order object
   - sha: e51da1d1e9e2a0b7a0e831970544d022fa63a58a
