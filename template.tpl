@@ -11,7 +11,10 @@ ___INFO___
 {
   "displayName": "Adform Tracking",
   "description": "An unofficial template for Adform tracking, allowing more flexibility.",
-  "categories": ["AFFILIATE_MARKETING", "ADVERTISING"],
+  "categories": [
+    "AFFILIATE_MARKETING",
+    "ADVERTISING"
+  ],
   "securityGroups": [],
   "id": "cvt_temp_public_id",
   "type": "TAG",
@@ -68,7 +71,7 @@ ___TEMPLATE_PARAMETERS___
         ],
         "displayName": "Tracking Point Name (pagename)",
         "simpleValueType": true,
-        "name": "pageName",
+        "name": "pagename",
         "type": "TEXT"
       }
     ]
@@ -173,8 +176,10 @@ const injectScript = require('injectScript');
 // Get value of fields
 const hostname = data.hostname;
 const pm = data.pm;
-const pageName = data.pageName;
+const pagename = data.pagename;
 const divider = data.divider;
+const orderVariable = data.orderVariable;
+const orderTable = data.orderTable;
 
 function assign(target) {
   if(callInWindow('toString.call', target) !== '[object Object]') {
@@ -216,12 +221,12 @@ const _push = createQueue('_adftrack');
 
 const requestData = {
   pm: pm,
-  pagename: encodeUriComponent(pageName),
+  pagename: encodeUriComponent(pagename),
   divider: encodeUriComponent(divider)
 };
 
-const variableData = callInWindow('toString.call', data.orderVariable) === '[object Object]' ? data.orderVariable : {};
-const tableData = makeTableMap(data.orderTable, 'name', 'value') || {};
+const variableData = callInWindow('toString.call', orderVariable) === '[object Object]' ? orderVariable : {};
+const tableData = callInWindow('toString.call', orderTable) === '[object Array]' ? makeTableMap(orderTable, 'name', 'value') : {};
 const order = assign({}, variableData, tableData);
 
 if(!isEmptyObject(order)) {
