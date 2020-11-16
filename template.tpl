@@ -166,14 +166,12 @@ ___TEMPLATE_PARAMETERS___
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
-// Require the necessary APIs
-const callInWindow = require('callInWindow');
 const createQueue = require('createQueue');
 const encodeUriComponent = require('encodeUriComponent');
-const makeTableMap = require('makeTableMap');
+const getType = require('getType');
 const injectScript = require('injectScript');
+const makeTableMap = require('makeTableMap');
 
-// Get value of fields
 const hostname = data.hostname;
 const pm = data.pm;
 const pagename = data.pageName;
@@ -181,17 +179,21 @@ const divider = data.divider;
 const orderVariable = data.orderVariable;
 const orderTable = data.orderTable;
 
+// https://s2.adform.net/banners/scripts/st/trackpoint-async.js
+const url = 'https://' + hostname + '/serving/scripts/trackpoint/async/';
+const _push = createQueue('_adftrack');
+
 function assign(target) {
-  if(callInWindow('toString.call', target) !== '[object Object]') {
+  if(getType(target) !== 'object') {
     return null;
   }
   
   const to = target;
   
-  for(let index = 1; index < arguments.length; index++) {
+  for(let index = arguments.length - 1; index > 0; index--) {
     const nextSource = arguments[index];
     
-    if(nextSource !== null && nextSource !== undefined) { 
+    if(getType(nextSource) === 'object') { 
       for(let nextKey in nextSource) {
         if(nextSource.hasOwnProperty(nextKey)) {
           to[nextKey] = nextSource[nextKey];
@@ -204,8 +206,8 @@ function assign(target) {
 }
 
 const isEmptyObject = target => {
-  if(callInWindow('toString.call', target) !== '[object Object]') {
-    return false;
+  if(getType(target) !== 'object') {
+    return null;
   }
   
   for(let key in target) {
@@ -217,27 +219,22 @@ const isEmptyObject = target => {
   return true;
 };
 
-const _push = createQueue('_adftrack');
-
-const requestData = {
+const request = {
   pm: pm,
   pagename: encodeUriComponent(pagename),
   divider: encodeUriComponent(divider)
 };
 
-const variableData = callInWindow('toString.call', orderVariable) === '[object Object]' ? orderVariable : {};
-const tableData = callInWindow('toString.call', orderTable) === '[object Array]' ? makeTableMap(orderTable, 'name', 'value') : {};
-const order = assign({}, variableData, tableData);
+const variableData = getType(orderVariable) === 'object' ? orderVariable : {};
+const tableData = getType(orderTable) === 'array' ? makeTableMap(orderTable, 'name', 'value') : {};
+const order = assign({}, tableData, variableData);
 
-if(!isEmptyObject(order)) {
-  requestData.order = order;
+if(isEmptyObject(order) === false) {
+  request.order = order;
 }
 
-_push(requestData);
-
-const url = 'https://' + hostname + '/serving/scripts/trackpoint/async/';
-
-injectScript(url, data.gtmOnSuccess, data.gtmOnFailure);
+_push(request);
+injectScript(url, data.gtmOnSuccess, data.gtmOnFailure, 'adf');
 
 
 ___WEB_PERMISSIONS___
@@ -291,45 +288,6 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 8,
                     "boolean": false
-                  }
-                ]
-              },
-              {
-                "type": 3,
-                "mapKey": [
-                  {
-                    "type": 1,
-                    "string": "key"
-                  },
-                  {
-                    "type": 1,
-                    "string": "read"
-                  },
-                  {
-                    "type": 1,
-                    "string": "write"
-                  },
-                  {
-                    "type": 1,
-                    "string": "execute"
-                  }
-                ],
-                "mapValue": [
-                  {
-                    "type": 1,
-                    "string": "toString.call"
-                  },
-                  {
-                    "type": 8,
-                    "boolean": false
-                  },
-                  {
-                    "type": 8,
-                    "boolean": false
-                  },
-                  {
-                    "type": 8,
-                    "boolean": true
                   }
                 ]
               }
