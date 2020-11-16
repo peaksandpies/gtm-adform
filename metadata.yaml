@@ -15,8 +15,10 @@
 homepage: "https://www.peaksandpies.com"
 documentation: "https://github.com/peaksandpies/gtm-adform#readme"
 versions:
+  - sha: 4d0e205aff845c4710fd1dfc16a6973d05268144
+    changeNotes: Added caching
   - sha: e6a824afccb2184b9c4e8cbfc6912ad86bd680a5
-    changeNotes: Fixed bug which occured when calling `isEmptyObject`
+    changeNotes: Fixed bug which occured when calling isEmptyObject()
   - sha: f9024f4c7bd7dee988cd39388a8bdc3fc8fdd1d0
     changeNotes: Renamed field to avoid losing data when updating
   - sha: e82dc72ea7794f2b62f904cc83499d9df5b413d1
