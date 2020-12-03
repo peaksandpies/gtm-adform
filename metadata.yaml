@@ -15,6 +15,8 @@
 homepage: "https://www.peaksandpies.com"
 documentation: "https://github.com/peaksandpies/gtm-adform#readme"
 versions:
+  - sha: 640e95c60d7ac3c2c2d3ad9488b038f17d7bed73
+    changeNotes: Fixed bug when tracking two Tracking Points on the same page
   - sha: 4d0e205aff845c4710fd1dfc16a6973d05268144
     changeNotes: Added caching
   - sha: e6a824afccb2184b9c4e8cbfc6912ad86bd680a5
