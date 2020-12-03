@@ -166,11 +166,13 @@ ___TEMPLATE_PARAMETERS___
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
+const callInWindow = require('callInWindow');
 const createQueue = require('createQueue');
 const encodeUriComponent = require('encodeUriComponent');
 const getType = require('getType');
 const injectScript = require('injectScript');
 const makeTableMap = require('makeTableMap');
+const templateStorage = require('templateStorage');
 
 const hostname = data.hostname;
 const pm = data.pm;
@@ -178,10 +180,6 @@ const pagename = data.pageName;
 const divider = data.divider;
 const orderVariable = data.orderVariable;
 const orderTable = data.orderTable;
-
-// https://s2.adform.net/banners/scripts/st/trackpoint-async.js
-const url = 'https://' + hostname + '/serving/scripts/trackpoint/async/';
-const _push = createQueue('_adftrack');
 
 function assign(target) {
   if(getType(target) !== 'object') {
@@ -233,8 +231,24 @@ if(isEmptyObject(order) === false) {
   request.order = order;
 }
 
-_push(request);
-injectScript(url, data.gtmOnSuccess, data.gtmOnFailure, 'adf');
+if(templateStorage.getItem('loaded') === true) {
+  callInWindow('adf.track', request.pm, request.pagename, request.order);
+  data.gtmOnSuccess();
+}
+else {
+  // https://s2.adform.net/banners/scripts/st/trackpoint-async.js
+  const url = 'https://' + hostname + '/serving/scripts/trackpoint/async/';
+  const _push = createQueue('_adftrack');
+  
+  _push(request);
+  injectScript(url, () => {
+    templateStorage.setItem('loaded', true);
+    data.gtmOnSuccess();
+  }, () => {
+    templateStorage.setItem('loaded', false);
+    data.gtmOnFailure();
+  }, 'adf');  
+}
 
 
 ___WEB_PERMISSIONS___
@@ -290,6 +304,45 @@ ___WEB_PERMISSIONS___
                     "boolean": false
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "adf.track"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
               }
             ]
           }
@@ -324,6 +377,16 @@ ___WEB_PERMISSIONS___
     },
     "clientAnnotations": {
       "isEditedByUser": true
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "access_template_storage",
+        "versionId": "1"
+      },
+      "param": []
     },
     "isRequired": true
   }
